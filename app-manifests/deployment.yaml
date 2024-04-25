@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: holiday-web-deployment
+  namespace: dev
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: holiday-web
+  template:
+    metadata:
+      labels:
+        app: holiday-web
+    spec:
+      containers:
+      - name: holiday-web
+        image: leetd/holiday-web:v3
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        env: # Todo: ConfigMap
+        - name: API_URL
+          value: "http://holiday.lab/api"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: holiday-api-deployment
+  namespace: dev
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: holiday-api
+  template:
+    metadata:
+      labels:
+        app: holiday-api
+    spec:
+      containers:
+      - name: holiday-api
+        image: leetd/holiday-api:v3
+        ports:
+        - containerPort: 5000
+        env: # Todo: Secret, ConfigMap
+        - name: DbSettings__Server
+          value: "acid-minimal-cluster.ha-postgres.svc.cluster.local"
+        - name: DbSettings__Database
+          value: "dotnet-7-dapper-crud-api"
+        - name: DbSettings__UserId
+          value: "postgres"
+        - name: DbSettings__Password
+          value: "WSO9kkwuxGTAHMae5LZak5h4i0Vomez1PPVZ4zOIGRlHzIrR8okxMBX4n93z8mID" ####
+        - name: Api__Protocol
+          value: "http"
+        - name: Api__Host
+          value: "0.0.0.0"
+        - name: Api__Port
+          value: "5000"
