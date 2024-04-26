@@ -1,0 +1,36 @@
+controller:
+  config:
+    http-snippet: |
+      proxy_cache_path /tmp/nginx-cache levels=1:2 keys_zone=static:2m max_size=100m inactive=60m use_temp_path=off;
+  
+  kind: DaemonSet
+  
+  service:
+    type: NodePort
+    nodePorts:
+      http: 32080
+      https: 32443
+  
+  extraInitContainers:
+    - name: init-sysctl
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          sysctl -w net.core.somaxconn=65535
+          sysctl -w net.ipv4.ip_local_port_range="1024 65535"
+          sysctl -w fs.file-max=2820796
+      #     mkdir -p /tmp/nginx/vitanedu-cache && chown -R 101:82 /tmp/nginx/vitanedu-cache
+      # volumeMounts:
+      #   - name: cache
+      #     mountPath: /tmp/nginx/vitanedu-cache
+      securityContext:
+        privileged: true
+  
+  metrics:
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus-stack #<PREFIX>-prometheus-stack
+      namespace: "monitoring" # ns of prometheus-stack
