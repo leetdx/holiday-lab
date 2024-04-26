@@ -11,6 +11,6 @@ Deploy application on Kubernetes with the following requirements: 
     - https://dev.to/dm8ry/how-to-deploy-a-high-availability-ha-postgres-cluster-in-kubernetes-79
     - https://devopscube.com/deploy-postgresql-statefulset / https://weng-albert.medium.com/mastering-high-availability-postgresql-meets-kubernetes-929846f6cc88
 - [x] Configure the Front-End services to call the Back-End services, and the Back-End services to call the database.
-- [ ] Store relevant credential settings in Secrets.
+- [x] Store relevant credential settings in Secrets.
 - [ ] (Optional) Use DaemonSet to deploy ElasticSearch (using the fluentd-elasticsearch image) or complete EFK stack or any kind of logging and monitoring stacks.
 - [ ] Deploy an Ingress to allow access to the Front-End service from the internet using a DNS. Configuring HTTPS is a bonus point. If a domain name is not available, use LoadBalancer service type (maximum points will not be awarded). 

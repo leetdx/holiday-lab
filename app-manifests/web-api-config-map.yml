@@ -4,9 +4,9 @@ metadata:
   name: web-api-configmap
   namespace: dev
 data:
-  database_url: dbservice.env.svc.cluster.local
-  database: dotnet-7-dapper-crud-api
+  database_url: "acid-minimal-cluster.ha-postgres.svc.cluster.local" # dbservice.env.svc.cluster.local
+  database: "dotnet-7-dapper-crud-api"
   api_protocol: http
   api_host: "0.0.0.0"
-  api_port: 5000
+  api_port: "5000"
 
