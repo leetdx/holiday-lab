@@ -21,7 +21,10 @@ spec:
             protocol: TCP
         env: # Todo: ConfigMap
         - name: API_URL
-          value: "http://holiday.lab/api"
+          valueFrom:
+            configMapKeyRef: 
+              name: web-configmap
+              key: backend_url
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -45,16 +48,37 @@ spec:
         - containerPort: 5000
         env: # Todo: Secret, ConfigMap
         - name: DbSettings__Server
-          value: "acid-minimal-cluster.ha-postgres.svc.cluster.local"
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: database_url
         - name: DbSettings__Database
-          value: "dotnet-7-dapper-crud-api"
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: database
         - name: DbSettings__UserId
-          value: "postgres"
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: db_user
         - name: DbSettings__Password
-          value: "WSO9kkwuxGTAHMae5LZak5h4i0Vomez1PPVZ4zOIGRlHzIrR8okxMBX4n93z8mID" ####
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: db_password
         - name: Api__Protocol
-          value: "http"
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: api_protocol
         - name: Api__Host
-          value: "0.0.0.0"
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: api_host
         - name: Api__Port
-          value: "5000"
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: api_port
