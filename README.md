@@ -6,7 +6,7 @@ Deploy application on Kubernetes with the following requirements: 
 - [x] Deploy 3 pods to run Back-End services (e.g. C#, Java, Golang, Python, etc.). 
     - https://jasonwatmore.com/net-7-dapper-postgresql-crud-api-tutorial-in-aspnet-core#data-context-cs:~:text=Run%20the%20.NET%207.0%20CRUD%20Example%20API%20Locally
 - [x] The images for Front-End and Back-End must be built from Dockerfile and pushed to Dockerhub (default images from the Docker registry should not be used) 
-- [ ] The pods should be auto-scaled based on CPU usage. 
+- [x] The pods should be auto-scaled based on CPU usage. 
 - [x] Deploy a database (e.g. MySQL, MongoDB, etc.) with the option to implement a High Availability (HA) model using Helm or StatefulSet (bonus points will be awarded).
     - https://dev.to/dm8ry/how-to-deploy-a-high-availability-ha-postgres-cluster-in-kubernetes-79
     - https://devopscube.com/deploy-postgresql-statefulset / https://weng-albert.medium.com/mastering-high-availability-postgresql-meets-kubernetes-929846f6cc88

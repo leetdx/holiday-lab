@@ -41,6 +41,11 @@ spec:
       containers:
       - name: holiday-api
         image: leetd/holiday-api:v3
+        resources:
+          requests:
+            cpu: 10m # "one hundred millicpu" or "one hundred millicores", and this is understood to mean the same thing.
+          # limits:
+          #   cpu: 50m # "one hundred millicpu" or "one hundred millicores", and this is understood to mean the same thing.
         ports:
         - containerPort: 5000
         env: # Todo: Secret, ConfigMap
