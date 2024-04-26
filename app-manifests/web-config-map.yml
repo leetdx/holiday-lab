@@ -4,4 +4,4 @@ metadata:
   name: web-configmap
   namespace: dev
 data: 
-  backend_url: http://holiday.lab/api
+  backend_url: "http://holiday.lab/api"
