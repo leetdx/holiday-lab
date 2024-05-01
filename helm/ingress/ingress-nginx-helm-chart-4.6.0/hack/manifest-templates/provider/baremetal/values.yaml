@@ -1,7 +1,0 @@
-# Baremetal
-controller:
-  service:
-    type: NodePort
-
-  publishService:
-    enabled: false
