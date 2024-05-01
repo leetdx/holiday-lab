@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: holiday-web-deployment
+  namespace: dev
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: holiday-web
+  template:
+    metadata:
+      labels:
+        app: holiday-web
+    spec:
+      containers:
+      - name: holiday-web
+        image: leetd/holiday-web:v3
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        env:
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef: 
+              name: web-configmap
+              key: backend_url
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: holiday-api-deployment
+  namespace: dev
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: holiday-api
+  template:
+    metadata:
+      labels:
+        app: holiday-api
+    spec:
+      containers:
+      - name: holiday-api
+        image: leetd/holiday-api:v3.1
+        resources:
+          requests:
+            cpu: 10m
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DbSettings__Server
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: database_url
+        - name: DbSettings__Database
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: database
+        - name: DbSettings__UserId
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: db_user
+        - name: DbSettings__Password
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: db_password
+        - name: Api__Protocol
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: api_protocol
+        - name: Api__Host
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: api_host
+        - name: Api__Port
+          valueFrom:
+            configMapKeyRef:
+              name: web-api-configmap
+              key: api_port
