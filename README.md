@@ -1,5 +1,7 @@
 # Kubernetes: Big Lab
 
+<a href="https://www.youtube.com/watch?v=d51YVGhTFWg" target="_blank"><img src="https://img.youtube.com/vi/d51YVGhTFWg/0.jpg" alt="Kubernetes Lab walkthrough" style="width: 600px; border-radius: 5px;"></a>
+
 Deploy application on Kubernetes with the following requirements: 
 - [x] Deploy 3 pods to run Front-End services (e.g. ReactJS, VueJS, Angular, etc.).
 - [x] Deploy 3 pods to run Back-End services (e.g. C#, Java, Golang, Python, etc.).
@@ -17,7 +19,7 @@ Deploy application on Kubernetes with the following requirements: 
     - AGW x Ingress controller add-on: [AGW x Ingress controller]
     - Domain managed by [squarespace.com]
 
-## AKS
+### AKS
 
 - Create a new resource group
 ```bash
@@ -330,7 +332,38 @@ k get pods -n dev
 # holiday-web-deployment-6674b6fdc9-wptrc   1/1     Running   0          26s
 ```
 
+- Set up certificate, prerequisites:
+    - RESOURCE_GROUP=buffaloResourceGroup
+    - AGW=buffaloApplicationGateway
+    - SUBSCRIPTION_ID=c3fdfb88-d756-4f25-8eba-17f28786dbda
+    - MANAGED_IDENTITY=buffaloUserAssignedManagedIdentity
+    - KEY_VAULT=buffaloKeyVault
+    - KEY_VAULT_CERT=leetd-dev
+```shell
+# Get the Application Gateway we want to modify
+$appgw = Get-AzApplicationGateway -Name $AGW -ResourceGroupName $RESOURCE_GROUP
+
+# Specify the resource id to the user assigned managed identity - This can be found by going to the properties of the managed identity
+Set-AzApplicationGatewayIdentity -ApplicationGateway $appgw -UserAssignedIdentityId "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/buffaloResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$MANAGED_IDENTITY"
+
+# Get the secret ID from Key Vault
+$secret = Get-AzKeyVaultSecret -VaultName "$KEY_VAULT" -Name "$KEY_VAULT_CERT"
+$secretId = $secret.Id.Replace($secret.Version, "") # Remove the secret version so Application Gateway uses the latest version in future syncs
+
+# Specify the secret ID from Key Vault
+Add-AzApplicationGatewaySslCertificate -KeyVaultSecretId $secretId -ApplicationGateway $appgw -Name $secret.Name
+
+# Commit the changes to the Application Gateway
+Set-AzApplicationGateway -ApplicationGateway $appgw
+```
+
+Once the commands have been executed, you can navigate to your Application Gateway in the Azure portal and select the Listeners tab. Click Add Listener (or select an existing) and specify the Protocol to HTTPS. Under Choose a certificate select the certificate named in the previous steps. Once selected, select Add (if creating) or Save (if editing) to apply the referenced Key Vault certificate to the listener.
+
 - Verify via https://leetd.dev
+
+<img src="images/1.png" alt="1.png" width="700"/>
+
+<img src="images/2.png" alt="2.png" width="700"/>
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
