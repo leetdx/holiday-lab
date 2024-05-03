@@ -345,7 +345,7 @@ k get pods -n dev
 $appgw = Get-AzApplicationGateway -Name $AGW -ResourceGroupName $RESOURCE_GROUP
 
 # Specify the resource id to the user assigned managed identity - This can be found by going to the properties of the managed identity
-Set-AzApplicationGatewayIdentity -ApplicationGateway $appgw -UserAssignedIdentityId "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/buffaloResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$MANAGED_IDENTITY"
+Set-AzApplicationGatewayIdentity -ApplicationGateway $appgw -UserAssignedIdentityId "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$MANAGED_IDENTITY"
 
 # Get the secret ID from Key Vault
 $secret = Get-AzKeyVaultSecret -VaultName "$KEY_VAULT" -Name "$KEY_VAULT_CERT"
