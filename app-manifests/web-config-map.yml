@@ -5,3 +5,4 @@ metadata:
   namespace: dev
 data: 
   backend_url: "https://leetd.dev/api"
+  app_host: "0.0.0.0"

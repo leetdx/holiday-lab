@@ -5,7 +5,7 @@ metadata:
   namespace: dev
 data:
   database_url: "acid-minimal-cluster.ha-postgres"
-  database: "dotnet-7-dapper-crud-api"
+  database: "man-common-data"
   api_protocol: http
   api_host: "0.0.0.0"
   api_port: "5000"

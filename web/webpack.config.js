@@ -31,14 +31,14 @@ module.exports = {
     })],
     devServer: {
         historyApiFallback: true,
-        host: '0.0.0.0',
+        host: process.env.APP_HOST || 'localhost',
         port: 8080,
         allowedHosts: ['all']
     },
     externals: {
         // global app config object
         config: JSON.stringify({
-            apiUrl: process.env.API_URL
+            apiUrl: process.env.API_URL || 'http://localhost:5000/api'
         })
     }
 }

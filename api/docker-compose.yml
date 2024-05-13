@@ -5,9 +5,9 @@ services:
     image: postgres
     container_name: postgres_db
     environment:
-      POSTGRES_DB: dotnet-7-dapper-crud-api
+      POSTGRES_DB: man-common-data
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_PASSWORD: admin@1
     expose:
       - 5432
     volumes:
@@ -18,15 +18,15 @@ services:
     container_name: api
     depends_on:
       - postgres
-    image: leetd/holiday-api:v2
+    image: leetd/holiday-api:v3.2
     # build:
     #   context: .
     #   dockerfile: ./Dockerfile
     environment:
       DbSettings__Server: postgres
-      DbSettings__Database: dotnet-7-dapper-crud-api
+      DbSettings__Database: man-common-data
       DbSettings__UserId: postgres
-      DbSettings__Password: mysecretpassword
+      DbSettings__Password: admin@1
       Api__Protocol: http
       Api__Host: 0.0.0.0
       Api__Port: 5000
@@ -36,12 +36,13 @@ services:
       - frontend_network
       - backend_network
   web:
-    image: leetd/holiday-web:v1
+    image: leetd/holiday-web:v3.1
     container_name: web
     environment:
-      API_URL: http://localhost:4001
+      API_URL: http://localhost:4001/api
+      APP_HOST: 0.0.0.0
     ports:
-      - 8080:8080
+      - 8081:8080
     networks:
       - frontend_network
 

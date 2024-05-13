@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: holiday-web
-        image: leetd/holiday-web:v3
+        image: leetd/holiday-web:v3.1
         ports:
           - containerPort: 8080
             protocol: TCP
@@ -25,6 +25,11 @@ spec:
             configMapKeyRef: 
               name: web-configmap
               key: backend_url
+        - name: APP_HOST
+          valueFrom:
+            configMapKeyRef: 
+              name: web-configmap
+              key: app_host
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -43,7 +48,7 @@ spec:
     spec:
       containers:
       - name: holiday-api
-        image: leetd/holiday-api:v3.1
+        image: leetd/holiday-api:v3.2
         resources:
           requests:
             cpu: 10m
