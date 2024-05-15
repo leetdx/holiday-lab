@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-holiday-api  # Use release name for deployment name
+  namespace: {{ .Namespace }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: holiday-api
+  template:
+    metadata:
+      labels:
+        app: holiday-api
+    spec:
+      # volumes:
+      #   - name: secrets-store-inline
+      #     csi:
+      #       driver: secrets-store.csi.k8s.io
+      #       readOnly: true
+      #       volumeAttributes:
+      #         secretProviderClass: "azure-kvname"
+      #       nodePublishSecretRef:
+      #         name: secrets-store-creds
+      containers:
+      - name: holiday-api
+        # volumeMounts:
+        #   - name: secrets-store-inline
+        #     mountPath: "/mnt/secrets-store"
+        #     readOnly: true
+        image: {{ .Values.image }}
+        resources:
+          requests:
+            cpu: 10m
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DbSettings__Server
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: database_url
+        - name: DbSettings__Database
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: database
+        - name: DbSettings__UserId
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: db_user
+        - name: DbSettings__Password
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: db_password
+        - name: Api__Protocol
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: api_protocol
+        - name: Api__Host
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: api_host
+        - name: Api__Port
+          valueFrom:
+            secretKeyRef:
+              name: postgre-secret
+              key: api_port
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: holiday-api-deployment
+#   namespace: dev
+# spec:
+#   replicas: 3
+#   selector:
+#     matchLabels:
+#       app: holiday-api
+#   template:
+#     metadata:
+#       labels:
+#         app: holiday-api
+#     spec:
+#       containers:
+#       - name: holiday-api
+#         image: leetd/holiday-api:v3.2
+#         resources:
+#           requests:
+#             cpu: 10m
+#         ports:
+#         - containerPort: 5000
+        # env:
+        # - name: DbSettings__Server
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: web-api-configmap
+        #       key: database_url
+        # - name: DbSettings__Database
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: web-api-configmap
+        #       key: database
+        # - name: DbSettings__UserId
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: postgre-secret
+        #       key: db_user
+        # - name: DbSettings__Password
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: postgre-secret
+        #       key: db_password
+        # - name: Api__Protocol
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: web-api-configmap
+        #       key: api_protocol
+        # - name: Api__Host
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: web-api-configmap
+        #       key: api_host
+        # - name: Api__Port
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: web-api-configmap
+        #       key: api_port

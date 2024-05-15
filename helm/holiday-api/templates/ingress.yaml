@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-holiday-api-ingress  # Use release name for ingress name
+  namespace: {{ .Namespace }}
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway # must use annotation for use of ApplicationGateway | Listeners
+    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+    appgw.ingress.kubernetes.io/appgw-ssl-certificate: "{{ .Values.appgwSslCertificate }}"  # Reference certificate name from values
+    appgw.ingress.kubernetes.io/health-probe-path: "/api/healthcheck" # for backend health check controller
+spec:
+  # ingressClassName: azure-application-gateway
+  rules:
+  - host: {{ .Values.host }}
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: holiday-api-service
+            port:
+              number: 5000
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: holiday-api-ingress
+#   namespace: dev
+#   annotations:
+#     kubernetes.io/ingress.class: azure/application-gateway # must use annotation for use of ApplicationGateway | Listeners
+#     appgw.ingress.kubernetes.io/ssl-redirect: "true"
+#     appgw.ingress.kubernetes.io/appgw-ssl-certificate: "leetd-dev" # uploaded cert 'leetd.dev', key vault cert 'leetd-dev'
+#     appgw.ingress.kubernetes.io/health-probe-path: "/api/healthcheck" # for backend health check controller
+# spec:
+#   # ingressClassName: azure-application-gateway
+#   rules:
+#   - host: leetd.dev
+#     http:
+#       paths:
+#       - path: /api
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: holiday-api-service
+#             port:
+#               number: 5000

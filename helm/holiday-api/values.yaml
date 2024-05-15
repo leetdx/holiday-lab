@@ -1,0 +1,22 @@
+# Default values for the holiday-api chart
+
+replicas: 3
+image: leetd/holiday-api:v3.2
+
+# New values for HPA
+deployment: holiday-api-deployment  # Name of the deployment the HPA targets
+minReplicas: 2
+maxReplicas: 5
+cpuUtilization: 30
+
+# New values for Ingress
+host: leetd.dev  # Host for the ingress rule
+appgwSslCertificate: "leetd-dev"  # Name of the SSL certificate (replace with your actual name)
+
+# New values for ConfigMap
+# configData:
+#   databaseUrl: "acid-minimal-cluster.ha-postgres"
+#   database: "man-common-data"
+#   apiProtocol: "http"
+#   apiHost: "0.0.0.0"
+#   apiPort: "5000"

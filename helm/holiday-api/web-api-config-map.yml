@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-api-configmap
+  namespace: dev
+data:
+  database_url: "acid-minimal-cluster.ha-postgres"
+  database: "man-common-data"
+  api_protocol: http
+  api_host: "0.0.0.0"
+  api_port: "5000"
